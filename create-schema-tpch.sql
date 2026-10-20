@@ -1,6 +1,6 @@
 -- Nue Lopez
 -- Relational Schemas
--- 11 September 2026
+-- 19 September 2026
 
 --	Base Entity tables; no foreign keys. 
 CREATE TABLE Products(
@@ -57,7 +57,7 @@ CREATE TABLE Orders(
 CREATE TABLE OrderItems(
     orderID INTEGER NOT NULL,
     productID INTEGER NOT NULL,
-    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    quantity INTEGER NOT NULL CHECK (quantity >= 0),
     PRIMARY KEY (orderID, productID),
     FOREIGN KEY (orderID) REFERENCES Orders(orderID) ON DELETE CASCADE,
     FOREIGN KEY (productID) REFERENCES Products(productID)
