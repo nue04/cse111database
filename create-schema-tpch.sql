@@ -1,10 +1,10 @@
 -- Nue Lopez
 -- Relational Schemas
--- 19 September 2026
+-- 26 September 2026
 
 --	Base Entity tables; no foreign keys. 
 CREATE TABLE Products(
-    productID INTEGER PRIMARY KEY,
+	productID INTEGER PRIMARY KEY,
     productName VARCHAR(100) NOT NULL,
     productType VARCHAR(20) NOT NULL,
     productPrice DECIMAL(8, 2) NOT NULL,
@@ -19,7 +19,6 @@ CREATE TABLE Vendors(
     vendorAddress VARCHAR(255) 
 );
 
-
 CREATE TABLE LocationsInStore(
     locationID INTEGER PRIMARY KEY,
     aisleNumber INTEGER,
@@ -27,14 +26,14 @@ CREATE TABLE LocationsInStore(
     shelfNumber INTEGER
 );
 
-
 CREATE TABLE Customers (
     custID INTEGER PRIMARY KEY,
     custName VARCHAR(50) NOT NULL,
-    custEmail VARCHAR(100) NOT NULL,
+    custEmail VARCHAR(100) NOT NULL UNIQUE,
     custAddr VARCHAR(100),
     custBalance DECIMAL(7, 2) NOT NULL DEFAULT 0.00
 );
+
 
 --	1:N Relationship Entity Tables
 CREATE TABLE Employees (
@@ -42,7 +41,7 @@ CREATE TABLE Employees (
     employeeName VARCHAR(50) NOT NULL,
     employeeEmail VARCHAR(100) NOT NULL,
     locationID INTEGER,
-    FOREIGN KEY (locationID) REFERENCES LocationsInStore(locationID)
+    FOREIGN KEY (locationID) REFERENCES LocationsInStore(locationID) ON DELETE SET NULL
 );
 
 CREATE TABLE Orders (
@@ -54,10 +53,9 @@ CREATE TABLE Orders (
     orderDescription TEXT,
     custID INTEGER NOT NULL,
     employeeID INTEGER,
-    FOREIGN KEY (custID) REFERENCES Customers(custID),
-    FOREIGN KEY (employeeID) REFERENCES Employees(employeeID)
+    FOREIGN KEY (custID) REFERENCES Customers(custID) ON DELETE CASCADE,
+    FOREIGN KEY (employeeID) REFERENCES Employees(employeeID) ON DELETE SET NULL
 );
-
 
 --	M:N Relationship Tables (Many-many). 
 
@@ -71,23 +69,21 @@ CREATE TABLE OrderItems (
     FOREIGN KEY (productID) REFERENCES Products(productID)
 );
 
-
 --	Products-LocationsInStore
 CREATE TABLE InventoryStock (
     productID INTEGER NOT NULL,
     locationID INTEGER NOT NULL,
-    quantityOnHand INTEGER NOT NULL DEFAULT 0,
+    quantityOnHand INTEGER NOT NULL DEFAULT 0 CHECK (quantityOnHand >= 0),
     PRIMARY KEY (productID, locationID),
     FOREIGN KEY (productID) REFERENCES Products(productID),
     FOREIGN KEY (locationID) REFERENCES LocationsInStore(locationID)
 );
 
-
 --	Products-Vendors
 CREATE TABLE Supply (
     vendorID INTEGER NOT NULL,
     productID INTEGER NOT NULL,
-    wholesaleCost DECIMAL(8, 2) NOT NULL,
+    wholesaleCost DECIMAL(8, 2) NOT NULL CHECK (wholesaleCost >= 0.00),
     PRIMARY KEY (vendorID, productID),
     FOREIGN KEY (vendorID) REFERENCES Vendors(vendorID),
     FOREIGN KEY (productID) REFERENCES Products(productID)
@@ -97,7 +93,7 @@ CREATE TABLE Helps (
     employeeID INTEGER NOT NULL,
     custID INTEGER NOT NULL,
     interactionDate DATE NOT NULL,
-    PRIMARY KEY (employeeID, custID),
-    FOREIGN KEY (employeeID) REFERENCES Employees(employeeID),
-    FOREIGN KEY (custID) REFERENCES Customers(custID)
+    PRIMARY KEY (employeeID, custID, interactionDate),
+    FOREIGN KEY (employeeID) REFERENCES Employees(employeeID) ON DELETE CASCADE,
+    FOREIGN KEY (custID) REFERENCES Customers(custID) ON DELETE CASCADE
 );
