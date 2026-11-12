@@ -1,9 +1,20 @@
 -- ============================================================================
 -- CSE 111 Fall 2026: Project Checkpoint 2 Script
 -- Project Title: [Insert Project Title Here]
--- Team Members: [Member 1 Name], [Member 2 Name]
+-- Team Members: Nue Lopez, Garret Clark
 -- File: Checkpoint2-script.sql
 -- ============================================================================
+
+
+/*
+Delete these lines once draft is complete:
+Run through VS code through terminal. A guide will be written on how to complete this soon.
+
+Commit Message: Create SQL Checkpoint2 using template
+Renamed create-schema-tpch.sql to Checkpoint2-script.sql. Used template provided by CSE111 for Checkpoint 2 SQL script. 
+Next Step: Upload CREATE TABLEs, initial notes (at the top of document denoted /*____*\/, and create Guide on how to run database in VS code if necessary. 
+*/
+
 
 -- ============================================================================
 -- SCHEMA MODIFICATIONS SINCE CHECKPOINT 1
