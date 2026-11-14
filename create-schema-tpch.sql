@@ -18,10 +18,11 @@ DROP TABLE IF EXISTS products;
 
 --  Create Base Entity tables; no foreign keys. 
 CREATE TABLE products(
-	productID INTEGER PRIMARY KEY,
+    productID INTEGER PRIMARY KEY,
     productName VARCHAR(100) NOT NULL,
     productType VARCHAR(20) NOT NULL,
-    productPrice DECIMAL(8, 2) NOT NULL,
+    productPrice DECIMAL(8, 2) NOT NULL CHECK (productPrice >= 0.00),
+    color BOOLEAN NOT NULL DEFAULT FALSE CHECK (color IN (0, 1)),
     productDescription TEXT
 );
 
@@ -30,9 +31,11 @@ CREATE TABLE vendors(
     vendorName VARCHAR(50) NOT NULL,
     vendorPhone VARCHAR(20),
     vendorEmail VARCHAR(100),
-    vendorAddress VARCHAR(255) 
+    vendorAddress VARCHAR(255)
 );
 
+--	1:N Relationship Entity Tables using Foreign Keys
+-- WorksIn: locationsInStore:employees
 CREATE TABLE locationsInStore(
     locationID INTEGER PRIMARY KEY,
     aisleNumber INTEGER,
@@ -40,7 +43,7 @@ CREATE TABLE locationsInStore(
     shelfNumber INTEGER
 );
 
-CREATE TABLE customers (
+CREATE TABLE customers(
     custID INTEGER PRIMARY KEY,
     custName VARCHAR(50) NOT NULL,
     custEmail VARCHAR(100) NOT NULL UNIQUE,
@@ -49,22 +52,19 @@ CREATE TABLE customers (
 );
 
 
---	1:N Relationship Entity Tables using Foreign Keys
--- WorksIn: locationsInStore (1) <- employees (N)
 CREATE TABLE employees (
     employeeID INTEGER PRIMARY KEY,
     employeeName VARCHAR(50) NOT NULL,
     employeeEmail VARCHAR(100) NOT NULL UNIQUE,
+    isManager BOOLEAN NOT NULL DEFAULT FALSE CHECK (isManager IN (0, 1)),
     locationID INTEGER,
     FOREIGN KEY (locationID) REFERENCES locationsInStore(locationID) ON DELETE SET NULL
 );
---potentailly insert if a person is a manager or not... BOOL statement denoting. 
-
 
 --Places & Assist 1:N
-CREATE TABLE orders (
+CREATE TABLE orders(
     orderID INTEGER PRIMARY KEY,
-    orderPriority INTEGER DEFAULT 1,
+    orderPriority INTEGER DEFAULT 1, --values ranging from 1 to 3.
     shipAddr VARCHAR(100) NOT NULL,
     totalPrice DECIMAL(8, 2) NOT NULL CHECK (totalPrice >= 0.00),
     orderDate DATE NOT NULL,
@@ -78,17 +78,17 @@ CREATE TABLE orders (
 --	M:N Relationship Tables 
 
 --	products-orders. 
-CREATE TABLE orderItems (
+CREATE TABLE orderItems(
     orderID INTEGER NOT NULL,
     productID INTEGER NOT NULL,
-    quantity INTEGER NOT NULL CHECK (quantity >= 0),
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
     PRIMARY KEY (orderID, productID),
     FOREIGN KEY (orderID) REFERENCES orders(orderID) ON DELETE CASCADE,
     FOREIGN KEY (productID) REFERENCES products(productID)
 );
 
 --	products-locationsInStore
-CREATE TABLE inventoryStock (
+CREATE TABLE inventoryStock(
     productID INTEGER NOT NULL,
     locationID INTEGER NOT NULL,
     quantityOnHand INTEGER NOT NULL DEFAULT 0 CHECK (quantityOnHand >= 0),
@@ -107,6 +107,7 @@ CREATE TABLE supply (
     FOREIGN KEY (productID) REFERENCES products(productID)
 );
 
+--  helps
 CREATE TABLE helps (
     employeeID INTEGER NOT NULL,
     custID INTEGER NOT NULL,
