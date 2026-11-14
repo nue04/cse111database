@@ -88,10 +88,13 @@ FROM customers
 WHERE custBalance > 0;
 
 -- ----------------------------------------------------------------------------
--- Statement 02: [Brief Title]
--- Explanation: [Explanation here].
+-- Statement 02: Orders in Merced County in 2026. 
+-- Explanation: Counting the amount of orders shipped in Merced county this year.  
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 02 Here];
+SELECT COUNT(orderID)
+FROM orders
+WHERE (shipAddr LIKE '%MERCED%' OR shipAddr LIKE '%ATWATER%' OR shipAddr LIKE '%LOS BANOS%')
+    AND orderDate LIKE '2026%';
 
 -- [Continue Statements 03 through 10...]
 
