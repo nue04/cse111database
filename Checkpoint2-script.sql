@@ -32,9 +32,9 @@
 -- Statement 01: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 02: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 03: Nue Lopez: 100%, Garret Clark: 0%
--- Statement 04: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 05: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 06: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 04: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 05: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 06: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 07: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 08: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 09: Nue Lopez: XX%, Garret Clark: XX%
@@ -118,13 +118,36 @@ ORDER BY productName ASC;
 
 
 -- ----------------------------------------------------------------------------
--- Statement ##: [Brief Title]
+-- Statement 04: Top 5 Affordable Appliances within $300.
+-- Explanation: Selecting top 5 appliances ordered from most to least expensive.
+-- ----------------------------------------------------------------------------
+SELECT productID AS `Product ID`, productName AS [Appliance Name], productPrice AS 'Price'
+FROM products
+WHERE productType LIKE 'Appliance'
+AND productPrice <= 300
+ORDER BY productPrice DESC
+LIMIT 5;
+
+
+-- ----------------------------------------------------------------------------
+-- Statement 05: 2 new customers
+-- Explanation: [Explanation here].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement ## Here;
+
+-- ----------------------------------------------------------------------------
+-- Statement 06: Employee promoted to Manager
 -- Explanation: [Explanation here].
 -- ----------------------------------------------------------------------------
 -- [Insert SQL Statement ## Here];
 
-
 -- [Continue Statements 03 through 10...]
+
+
+
+
+
+
 -- ----------------------------------------------------------------------------
 -- Statement 11: [Brief Title]
 -- Explanation: [1 to 2 sentences explaining the join logic, filtering, 
