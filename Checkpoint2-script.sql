@@ -102,13 +102,19 @@ WHERE (shipAddr LIKE '%MERCED%' OR shipAddr LIKE '%ATWATER%' OR shipAddr LIKE '%
 
 -- ----------------------------------------------------------------------------
 -- Statement 03: Select furniture that is not a bed or a mattress. 
--- Explanation: Finding furnitures that is not a bed or a mattress. Extraction 
---                  used for potentially more complicated queries down below.
+-- Explanation: Finding furnitures that is not a bed or a mattress in 
+--  alphabetical order. Extraction used for potentially more complicated queries 
+--  down below. We are keeping items that belong in a bedroom, just removing the 
+--  items people sleep on. 
 -- ----------------------------------------------------------------------------
 SELECT productName AS [ITEM]
 FROM products
 WHERE productType LIKE 'FURNITURE'
-AND (productName OR productDescription) NOT LIKE ('bed' OR 'mattress');
+AND productName NOT LIKE '% Bed %' AND productName NOT LIKE '% Bed'
+AND productName NOT LIKE '%Mattress%'
+AND productDescription NOT LIKE '% bed %' AND productDescription NOT LIKE '% bed'
+AND productDescription NOT LIKE '%mattress%'
+ORDER BY productName ASC;
 
 
 -- ----------------------------------------------------------------------------
