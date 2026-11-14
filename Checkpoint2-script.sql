@@ -6,16 +6,6 @@
 -- ============================================================================
 
 
-/*
-Delete these lines once draft is complete:
-Run through VS code through terminal. A guide will be written on how to complete this soon.
-
-Commit Message: Create SQL Checkpoint2 using template
-Renamed create-schema-tpch.sql to Checkpoint2-script.sql. Used template provided by CSE111 for Checkpoint 2 SQL script. 
-Next Step: Upload CREATE TABLEs, initial notes (at the top of document denoted /*____*\/, and create Guide on how to run database in VS code if necessary. 
-*/
-
-
 -- ============================================================================
 -- SCHEMA MODIFICATIONS SINCE CHECKPOINT 1
 -- ============================================================================
@@ -89,11 +79,13 @@ PRAGMA foreign_keys = ON;
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
--- Statement 01: [Brief Title]
--- Explanation: [1 to 2 sentences explaining what data the query retrieves 
---              or what state modification it performs].
+-- Statement 01: Find the customer ID and name who has an outstanding balance. 
+-- Explanation: The data retrieves both the customerID and custName who owes 
+--              money to Captain Clarks store. We must track them down. 
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 01 Here];
+SELECT custID AS [Customer ID], custName AS 'Customer Name'
+FROM customers
+WHERE custBalance > 0;
 
 -- ----------------------------------------------------------------------------
 -- Statement 02: [Brief Title]
