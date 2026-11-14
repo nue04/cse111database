@@ -1,6 +1,6 @@
 -- ============================================================================
 -- CSE 111 Fall 2026: Project Checkpoint 2 Script
--- Project Title: [Insert Project Title Here]
+-- Project Title: [Captain Clark's Furniture and Appliance Store DBMS]
 -- Team Members: Nue Lopez, Garret Clark
 -- File: Checkpoint2-script.sql
 -- ============================================================================
@@ -15,7 +15,10 @@
 --  explicitly state: "No modifications made to the Checkpoint 1 schema."
 --
 -- Modifications:
--- 1. [Description of schema modification 1, or None]
+-- 1. Schema Modifications Since Checkpoint 1:
+--      * Added color (BOOLEAN) to products
+--      * Added isManager (BOOLEAN) to employees
+
 -- 2. [Description of schema modification 2]
 -- ============================================================================
 
@@ -26,42 +29,42 @@
 -- below. Each statement must sum to 100% across the 2 team members.
 --
 -- SECTION 1: SIMPLE STATEMENTS
--- Statement 01: [Member 1]: XX%, [Member 2]: XX%
--- Statement 02: [Member 1]: XX%, [Member 2]: XX%
--- Statement 03: [Member 1]: XX%, [Member 2]: XX%
--- Statement 04: [Member 1]: XX%, [Member 2]: XX%
--- Statement 05: [Member 1]: XX%, [Member 2]: XX%
--- Statement 06: [Member 1]: XX%, [Member 2]: XX%
--- Statement 07: [Member 1]: XX%, [Member 2]: XX%
--- Statement 08: [Member 1]: XX%, [Member 2]: XX%
--- Statement 09: [Member 1]: XX%, [Member 2]: XX%
--- Statement 10: [Member 1]: XX%, [Member 2]: XX%
+-- Statement 01: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 02: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 03: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 04: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 05: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 06: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 07: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 08: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 09: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 10: Nue Lopez: XX%, Garret Clark: XX%
 --
 -- SECTION 2: INTERMEDIATE STATEMENTS
--- Statement 11: [Member 1]: XX%, [Member 2]: XX%
--- Statement 12: [Member 1]: XX%, [Member 2]: XX%
--- Statement 13: [Member 1]: XX%, [Member 2]: XX%
--- Statement 14: [Member 1]: XX%, [Member 2]: XX%
--- Statement 15: [Member 1]: XX%, [Member 2]: XX%
--- Statement 16: [Member 1]: XX%, [Member 2]: XX%
--- Statement 17: [Member 1]: XX%, [Member 2]: XX%
--- Statement 18: [Member 1]: XX%, [Member 2]: XX%
--- Statement 19: [Member 1]: XX%, [Member 2]: XX%
--- Statement 20: [Member 1]: XX%, [Member 2]: XX%
--- Statement 21: [Member 1]: XX%, [Member 2]: XX%
+-- Statement 11: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 12: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 13: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 14: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 15: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 16: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 17: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 18: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 19: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 20: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 21: Nue Lopez: XX%, Garret Clark: XX%
 --
 -- SECTION 3: COMPLEX STATEMENTS
--- Statement 22: [Member 1]: XX%, [Member 2]: XX%
--- Statement 23: [Member 1]: XX%, [Member 2]: XX%
--- Statement 24: [Member 1]: XX%, [Member 2]: XX%
--- Statement 25: [Member 1]: XX%, [Member 2]: XX%
--- Statement 26: [Member 1]: XX%, [Member 2]: XX%
--- Statement 27: [Member 1]: XX%, [Member 2]: XX%
--- Statement 28: [Member 1]: XX%, [Member 2]: XX%
--- Statement 29: [Member 1]: XX%, [Member 2]: XX%
--- Statement 30: [Member 1]: XX%, [Member 2]: XX%
--- Statement 31: [Member 1]: XX%, [Member 2]: XX%
--- Statement 32: [Member 1]: XX%, [Member 2]: XX%
+-- Statement 22: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 23: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 24: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 25: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 26: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 27: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 28: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 29: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 30: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 31: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 32: Nue Lopez: XX%, Garret Clark: XX%
 -- ============================================================================
 
 -- Ensure SQLite foreign key constraints are enforced
@@ -79,13 +82,14 @@ PRAGMA foreign_keys = ON;
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
--- Statement 01: Find the customer ID and name who has an outstanding balance. 
--- Explanation: The data retrieves both the customerID and custName who owes 
---              money to Captain Clarks store. We must track them down. 
+-- Statement 01: Find the customer's ID, name, and balance. 
+-- Explanation: Query retrieves three ____: custID, custName, and custBalance. 
+--  We must track them down from decreasing order based on their balance owed.
 -- ----------------------------------------------------------------------------
-SELECT custID AS [Customer ID], custName AS 'Customer Name'
+SELECT custID AS [Customer ID], custName AS 'Customer Name', custBalance AS `Balance Owed`
 FROM customers
-WHERE custBalance > 0;
+WHERE custBalance > 0
+ORDER BY custBalance DESC;
 
 -- ----------------------------------------------------------------------------
 -- Statement 02: Orders in Merced County in 2026. 
@@ -96,15 +100,25 @@ FROM orders
 WHERE (shipAddr LIKE '%MERCED%' OR shipAddr LIKE '%ATWATER%' OR shipAddr LIKE '%LOS BANOS%')
     AND orderDate LIKE '2026%';
 
+-- ----------------------------------------------------------------------------
+-- Statement 03: Select furniture that is not a bed or a mattress. 
+-- Explanation: Finding furnitures that is not a bed or a mattress. Extraction 
+--                  used for potentially more complicated queries down below.
+-- ----------------------------------------------------------------------------
+SELECT productName AS [ITEM]
+FROM products
+WHERE productType LIKE 'FURNITURE'
+AND (productName OR productDescription) NOT LIKE ('bed' OR 'mattress');
+
+
+-- ----------------------------------------------------------------------------
+-- Statement ##: [Brief Title]
+-- Explanation: [Explanation here].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement ## Here];
+
+
 -- [Continue Statements 03 through 10...]
-
-
--- ============================================================================
--- SECTION 2: INTERMEDIATE STATEMENTS (Roughly 10 Statements)
--- Focus: Multi-table inner joins, left outer joins, aggregation with GROUP BY 
---        and HAVING, scalar subqueries, table aliasing, and conditional updates.
--- ============================================================================
-
 -- ----------------------------------------------------------------------------
 -- Statement 11: [Brief Title]
 -- Explanation: [1 to 2 sentences explaining the join logic, filtering, 
