@@ -34,7 +34,7 @@
 -- Statement 03: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 04: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 05: Nue Lopez: 100%, Garret Clark: 0%
--- Statement 06: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 06: Nue Lopez: 20%, Garret Clark: 80%
 -- Statement 07: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 08: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 09: Nue Lopez: XX%, Garret Clark: XX%
@@ -128,32 +128,60 @@ AND productPrice <= 300
 ORDER BY productPrice DESC
 LIMIT 5;
 
+-- ----------------------------------------------------------------------------
+-- Statement 05: Employee promoted to Manager
+-- Explanation: [Explanation here].
+-- ----------------------------------------------------------------------------
+UPDATE employees
+SET isManager = TRUE
+WHERE employeeID = 3;
 
 -- ----------------------------------------------------------------------------
--- Statement 05: 2 new customers
+-- Statement 06: 2 new customers
 -- Explanation: [Explanation here].
 -- ----------------------------------------------------------------------------
 -- [Insert SQL Statement ## Here;
 
--- ----------------------------------------------------------------------------
--- Statement 06: Employee promoted to Manager
--- Explanation: [Explanation here].
--- ----------------------------------------------------------------------------
--- [Insert SQL Statement ## Here];
 
 -- [Continue Statements 03 through 10...]
 
 
 
 
+-- ----------------------------------------------------------------------------
+-- Statement 11: Central Valley Customers Above Average Balance With Orders
+-- Explanation: Counts distinct customers from every county have placed at 
+--              least one order and have more than the average account balance.
+-- ----------------------------------------------------------------------------
+SELECT COUNT(DISTINCT(c.custID)) AS [Customer Count], AVG(c.custBalance) AS [Average Balance]
+FROM customers c
+JOIN orders o ON c.custID = o.custID
+WHERE (c.custAddr LIKE '% Merced, CA %'
+OR c.custAddr LIKE '% Atwater, CA %'
+OR c.custAddr LIKE '% Los Banos, CA %'
+OR c.custAddr LIKE '% Madera, CA %'
+OR c.custAddr LIKE '% Fresno, CA %'
+OR c.custAddr LIKE '% Modesto, CA %'
+OR c.custAddr LIKE '% Turlock, CA %')
+AND c.custBalance > (SELECT AVG(custBalance) FROM customers)
+HAVING COUNT(c.custID) >= 1;
 
 
 -- ----------------------------------------------------------------------------
--- Statement 11: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the join logic, filtering, 
---              or conditional modification].
+-- Statement 12: Find the Highest valued 2026 Orders with Customer and Associate Details 
+-- Explanation: Joins orders, customers, and employees to list the top 10 
+--              highest-priced 2026 orders over $1,000 along with the customer 
+--              and assisting associate names.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 11 Here];
+SELECT o.orderID, o.orderDate, c.custName AS [Customer Name], e.employeeName AS `Employee Name`, o.totalPrice AS 'Total Price'
+FROM orders o
+JOIN customers c ON c.custID = o.custID
+JOIN employees e ON e.employeeID = o.employeeID
+WHERE o.totalPrice > 1000 AND o.orderDate >= '2026-01-01'
+ORDER BY o.totalPrice DESC
+LIMIT 10;
+
+
 
 -- [Continue Statements 12 through 21...]
 
