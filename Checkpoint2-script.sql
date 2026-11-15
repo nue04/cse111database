@@ -184,13 +184,16 @@ LIMIT 10;
 -- ----------------------------------------------------------------------------
 -- Statement 13: Find Employee of the Month 
 -- Explanation: Find the Employee of the Month. This employee (not manager(s))
---              helped generate a large revenue for this company. We want to 
---              list the amount he helped assist in sales and number of sales.
+--            helped generate a large revenue for this company. We want to 
+--          list the amount they helped assist in sales and number of customers.
 -- ----------------------------------------------------------------------------
-SELECT e.employeeName AS [Employee of the Month], SUM(o.totalPrice), COUNT(o.orderID)
-FROM employees e, orders o, customer c
+SELECT e.employeeName AS [Employee of the Month], SUM(o.totalPrice), COUNT(c.custID) AS [Customer Count], COUNT(o.orderID) AS [Order Count]
+JOIN orders o ON o.employeeID = e.employeeID
+JOIN helps h ON o.employeeID = h.employeeID
+FROM employees e, customers c
 WHERE e.isManager = FALSE
-AND 
+HAVING MAX(o.totalPrice)
+LIMIT 1;
 
 -- [Continue Statements 12 through 21...]
 
