@@ -63,8 +63,6 @@
 -- Statement 28: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 29: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 30: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 31: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 32: Nue Lopez: XX%, Garret Clark: XX%
 -- ============================================================================
 
 -- Ensure SQLite foreign key constraints are enforced
@@ -187,15 +185,29 @@ LIMIT 10;
 --            helped generate a large revenue for this company. We want to 
 --          list the amount they helped assist in sales and number of customers.
 -- ----------------------------------------------------------------------------
-SELECT e.employeeName AS [Employee of the Month], SUM(o.totalPrice), COUNT(c.custID) AS [Customer Count], COUNT(o.orderID) AS [Order Count]
+SELECT e.employeeName AS [Employee of the Month], SUM(o.totalPrice) AS [Sales], COUNT(DISTINCT(o.custID)) AS [Customer Count], COUNT(o.orderID) AS [Order Count]
+FROM employees e
 JOIN orders o ON o.employeeID = e.employeeID
-JOIN helps h ON o.employeeID = h.employeeID
-FROM employees e, customers c
+JOIN customers c ON o.custID = c.custID
 WHERE e.isManager = FALSE
-HAVING MAX(o.totalPrice)
+AND o.orderDate LIKE '2026-09-%' --Commenting this line lists Alyssa Flores as all time seller. 
+GROUP BY e.employeeID, e.employeeName
+ORDER BY SUM(o.totalPrice) DESC
 LIMIT 1;
 
--- [Continue Statements 12 through 21...]
+-- ----------------------------------------------------------------------------
+-- Statement 14: Infrequent customers
+-- Explanation: List customers having five or less orders and their total spend.
+-- ----------------------------------------------------------------------------
+SELECT c.custID AS [Customer ID], c.custName AS [Customer Name], COUNT(o.orderID) AS [Total Orders], SUM(c.custBalance) AS [Total Valance]
+FROM customers c
+LEFT JOIN orders o ON c.custID = o.custID
+GROUP BY c.custID, c.custName
+HAVING COUNT(o.orderID) <= 5
+ORDER BY [Total Orders] DESC, c.custID;
+
+
+-- [Continue Statements 16 through 20...]
 
 
 -- ============================================================================
@@ -207,9 +219,9 @@ LIMIT 1;
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
--- Statement 22: [Brief Title]
+-- Statement 21: [Brief Title]
 -- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 22 Here];
+-- [Insert SQL Statement 21 Here];
 
 -- [Continue Statements 23 through 32...]
