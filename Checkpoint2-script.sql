@@ -181,7 +181,16 @@ WHERE o.totalPrice > 1000 AND o.orderDate >= '2026-01-01'
 ORDER BY o.totalPrice DESC
 LIMIT 10;
 
-
+-- ----------------------------------------------------------------------------
+-- Statement 13: Find Employee of the Month 
+-- Explanation: Find the Employee of the Month. This employee (not manager(s))
+--              helped generate a large revenue for this company. We want to 
+--              list the amount he helped assist in sales and number of sales.
+-- ----------------------------------------------------------------------------
+SELECT e.employeeName AS [Employee of the Month], SUM(o.totalPrice), COUNT(o.orderID)
+FROM employees e, orders o, customer c
+WHERE e.isManager = FALSE
+AND 
 
 -- [Continue Statements 12 through 21...]
 
