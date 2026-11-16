@@ -34,35 +34,37 @@
 -- Statement 03: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 04: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 05: Nue Lopez: 100%, Garret Clark: 0%
--- Statement 06: Nue Lopez: 20%, Garret Clark: 80%
+-- Statement 06: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 07: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 08: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 09: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 10: Nue Lopez: XX%, Garret Clark: XX%
 --
 -- SECTION 2: INTERMEDIATE STATEMENTS
--- Statement 11: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 12: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 13: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 14: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 15: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 16: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 17: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 18: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 11: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 12: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 13: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 14: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 15: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 16: Nue Lopez: 10%, Garret Clark: XX%
+-- Statement 17: Nue Lopez: 10%, Garret Clark: XX%
+-- Statement 18: Nue Lopez: 10%, Garret Clark: XX%
 -- Statement 19: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 20: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 21: Nue Lopez: XX%, Garret Clark: XX%
 --
 -- SECTION 3: COMPLEX STATEMENTS
--- Statement 22: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 23: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 24: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 25: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 26: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 22: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 23: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 24: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 25: Nue Lopez: 100%, Garret Clark: 0%
+-- Statement 26: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 27: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 28: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 29: Nue Lopez: XX%, Garret Clark: XX%
 -- Statement 30: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 31: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 32: Nue Lopez: XX%, Garret Clark: XX%
 -- ============================================================================
 
 -- Ensure SQLite foreign key constraints are enforced
@@ -114,7 +116,6 @@ AND productDescription NOT LIKE '% bed %' AND productDescription NOT LIKE '% bed
 AND productDescription NOT LIKE '%mattress%'
 ORDER BY productName ASC;
 
-
 -- ----------------------------------------------------------------------------
 -- Statement 04: Top 5 Affordable Appliances within $300.
 -- Explanation: Selecting top 5 appliances ordered from most to least expensive.
@@ -141,10 +142,11 @@ WHERE employeeID = 3;
 -- [Insert SQL Statement ## Here;
 
 
--- [Continue Statements 03 through 10...]
-
-
-
+-- ============================================================================
+-- SECTION 2: INTERMEDIATE STATEMENTS (Roughly 10 Statements)
+-- Focus: Multi-table inner joins, left outer joins, aggregation with GROUP BY 
+--        and HAVING, scalar subqueries, table aliasing, and conditional updates.
+-- ============================================================================
 
 -- ----------------------------------------------------------------------------
 -- Statement 11: Central Valley Customers Above Average Balance With Orders
@@ -179,6 +181,7 @@ WHERE o.totalPrice > 1000 AND o.orderDate >= '2026-01-01'
 ORDER BY o.totalPrice DESC
 LIMIT 10;
 
+
 -- ----------------------------------------------------------------------------
 -- Statement 13: Find Employee of the Month 
 -- Explanation: Find the Employee of the Month. This employee (not manager(s))
@@ -195,6 +198,7 @@ GROUP BY e.employeeID, e.employeeName
 ORDER BY SUM(o.totalPrice) DESC
 LIMIT 1;
 
+
 -- ----------------------------------------------------------------------------
 -- Statement 14: Infrequent customers
 -- Explanation: List customers having five or less orders and their total spend.
@@ -206,8 +210,52 @@ GROUP BY c.custID, c.custName
 HAVING COUNT(o.orderID) <= 5
 ORDER BY [Total Orders] DESC, c.custID;
 
+-- ----------------------------------------------------------------------------
+-- Statement 15: Check low stock asiles needing replenishment.
+-- Explanation: Joins locationsInStore and inventoryStock to total the current 
+--              units per asile and section to flag asiles HAVING fewer than 
+--              150 total units. 
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement ## Here];
+SELECT lis.aisleNumber AS [Aisle], lis.sectionName AS [Section], COUNT(i.productID) AS [Distinct Products], SUM(i.quantityOnHand) AS [Total Unit]
+FROM locationsInStore lis
+JOIN inventoryStock i ON lis.locationID = i.locationID
+GROUP BY lis.aisleNumber, lis.sectionName
+HAVING SUM(i.quantityOnHand) < 150
+ORDER BY [Total Unit] ASC;
 
--- [Continue Statements 16 through 20...]
+-- ----------------------------------------------------------------------------
+-- Statement 16: [Brief Title]
+-- Explanation: Scalar Subquery
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement ## Here];
+
+
+-- ----------------------------------------------------------------------------
+-- Statement 17: [Brief Title]
+-- Explanation: table aliasing
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement ## Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 18: [Brief Title]
+-- Explanation: conditional update
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement ## Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 19: [Brief Title]
+-- Explanation: [Explanation here].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement ## Here];
+
+
+-- ----------------------------------------------------------------------------
+-- Statement 20: [Brief Title]
+-- Explanation: [Explanation here].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement ## Here];
+
 
 
 -- ============================================================================
@@ -224,4 +272,57 @@ ORDER BY [Total Orders] DESC, c.custID;
 -- ----------------------------------------------------------------------------
 -- [Insert SQL Statement 21 Here];
 
--- [Continue Statements 23 through 32...]
+-- ----------------------------------------------------------------------------
+-- Statement 22: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 23: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 24: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 25: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 26: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 27: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 28: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
+
+-- ----------------------------------------------------------------------------
+-- Statement 29: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
+
+
+-- ----------------------------------------------------------------------------
+-- Statement 30: [Brief Title]
+-- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- ----------------------------------------------------------------------------
+-- [Insert SQL Statement 2# Here];
