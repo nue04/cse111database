@@ -34,11 +34,11 @@
 -- Statement 03: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 04: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 05: Nue Lopez: 100%, Garret Clark: 0%
--- Statement 06: Nue Lopez: 100%, Garret Clark: 0%
--- Statement 07: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 08: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 09: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 10: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 06: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 07: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 08: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 09: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 10: Nue Lopez: 0%, Garret Clark: 100%
 --
 -- SECTION 2: INTERMEDIATE STATEMENTS
 -- Statement 11: Nue Lopez: 100%, Garret Clark: 0%
@@ -46,25 +46,23 @@
 -- Statement 13: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 14: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 15: Nue Lopez: 100%, Garret Clark: 0%
--- Statement 16: Nue Lopez: 10%, Garret Clark: XX%
--- Statement 17: Nue Lopez: 10%, Garret Clark: XX%
--- Statement 18: Nue Lopez: 10%, Garret Clark: XX%
--- Statement 19: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 20: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 21: Nue Lopez: XX%, Garret Clark: XX%
---
+-- Statement 16: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 17: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 18: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 19: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 20: Nue Lopez: 0%, Garret Clark: 100%
+
 -- SECTION 3: COMPLEX STATEMENTS
+-- Statement 21: Nue Lopez: XX%, Garret Clark: 0%
 -- Statement 22: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 23: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 24: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 25: Nue Lopez: 100%, Garret Clark: 0%
--- Statement 26: Nue Lopez: 100%, Garret Clark: 0%
--- Statement 27: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 28: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 29: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 30: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 31: Nue Lopez: XX%, Garret Clark: XX%
--- Statement 32: Nue Lopez: XX%, Garret Clark: XX%
+-- Statement 26: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 27: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 28: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 29: Nue Lopez: 0%, Garret Clark: 100%
+-- Statement 30: Nue Lopez: 0%, Garret Clark: 100%
 -- ============================================================================
 
 -- Ensure SQLite foreign key constraints are enforced
@@ -136,10 +134,58 @@ SET isManager = TRUE
 WHERE employeeID = 3;
 
 -- ----------------------------------------------------------------------------
--- Statement 06: 2 new customers
--- Explanation: [Explanation here].
+-- Statement 06: High Cost Furniture Finder
+-- Explanation: This statement searches for items priced at a minimum of $500 
+--              or higher. It also retrieves the product's ID, name, and price 
+--              of the furniture.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement ## Here;
+SELECT productID, productName, productPrice
+FROM products
+WHERE productType = 'Furniture' AND productPrice >= 500.00
+ORDER BY productPrice DESC;
+
+-- ----------------------------------------------------------------------------
+-- Statement 07: Customer Account Balance
+-- Explanation: This statement finds the total number of registered customers, 
+--              and the combined account balances between all customers. The 
+--              average balance is also included.
+-- ----------------------------------------------------------------------------
+SELECT 
+    COUNT(*) AS total_customers,
+    SUM(custBalance) AS total_outstanding_balance,
+    ROUND(AVG(custBalance), 2) AS average_customer_balance
+FROM customers;
+
+-- ----------------------------------------------------------------------------
+-- Statement 08: Walnut Product Catalog Search
+-- Explanation: This statement retrieves the ID, name, category, and retail 
+--              price of products containing 'Walnut' in their name, which is 
+--              then ordered by price.
+-- ----------------------------------------------------------------------------
+SELECT productID, productName, productType, productPrice
+FROM products
+WHERE productName LIKE '%Walnut%'
+ORDER BY productPrice ASC;
+
+-- ----------------------------------------------------------------------------
+-- Statement 09: New Merchandise Vendor Registration
+-- Explanation: Inserts a new supplier into the vendors table with contact and 
+--              address details.
+-- ----------------------------------------------------------------------------
+INSERT INTO vendors (vendorID, vendorName, vendorPhone, vendorEmail, vendorAddress)
+VALUES (
+    126, 
+    'Central Valley Woodworks', 
+    '209-555-0194', 
+    'orders@cvwoodworks.example', 
+    '1420 Industrial Way, Merced, CA 95340'
+);
+
+-- ----------------------------------------------------------------------------
+-- Statement 10: Single-Row Customer Balance Payment
+-- Explanation: This statement records a $100.00 payment toward customer ID 5's 
+--              account balance, using a primary-key search to find them.
+-- ----------------------------------------------------------------------------
 
 
 -- ============================================================================
@@ -225,38 +271,89 @@ HAVING MAX(s.wholesaleCost) > 1000
 ORDER BY [Highest Cost] DESC;
 
 -- ----------------------------------------------------------------------------
--- Statement 16: [Brief Title]
--- Explanation: Scalar Subquery
+-- Statement 16: Store Inventory Breakdown
+-- Explanation: This statement retrieves each stocked product's ID, name, and 
+--              category along with the aisle, section, shelf, and quantity of 
+--              the item that the store has.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement ## Here];
-
-
--- ----------------------------------------------------------------------------
--- Statement 17: [Brief Title]
--- Explanation: table aliasing
--- ----------------------------------------------------------------------------
--- [Insert SQL Statement ## Here];
-
--- ----------------------------------------------------------------------------
--- Statement 18: [Brief Title]
--- Explanation: conditional update
--- ----------------------------------------------------------------------------
--- [Insert SQL Statement ## Here];
-
--- ----------------------------------------------------------------------------
--- Statement 19: [Brief Title]
--- Explanation: [Explanation here].
--- ----------------------------------------------------------------------------
--- [Insert SQL Statement ## Here];
-
+SELECT 
+    P.productID,
+    P.productName,
+    P.productType,
+    L.aisleNumber,
+    L.sectionName,
+    L.shelfNumber,
+    I.quantityOnHand
+FROM inventorystock I
+JOIN products P ON I.productID = P.productID
+JOIN locationsinstore L ON I.locationID = L.locationID
+ORDER BY L.aisleNumber ASC, L.shelfNumber ASC, P.productName ASC;
 
 -- ----------------------------------------------------------------------------
--- Statement 20: [Brief Title]
--- Explanation: [Explanation here].
+-- Statement 17: Multi-Product Vendor Supply Retrieval
+-- Explanation: This statement lists vendors that supply at least three unique 
+--              products to the store, along with the total item count and 
+--              average cost of the items.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement ## Here];
+SELECT 
+    V.vendorID,
+    V.vendorName,
+    COUNT(S.productID) AS products_supplied,
+    ROUND(AVG(S.wholesaleCost), 2) AS avg_wholesale_cost
+FROM vendors V
+JOIN supply S ON V.vendorID = S.vendorID
+GROUP BY V.vendorID, V.vendorName
+HAVING COUNT(S.productID) >= 3
+ORDER BY avg_wholesale_cost DESC;
 
+-- ----------------------------------------------------------------------------
+-- Statement 18: Employee Order Workload & Revenue Summary
+-- Explanation: This statement displays every employee that the store has, 
+--              along with their total amount of assisted orders and total 
+--              sales revenue that they've handled, including employees with 
+--              zero orders.
+-- ----------------------------------------------------------------------------
+SELECT 
+    E.employeeID,
+    E.employeeName,
+    COUNT(O.orderID) AS orders_assisted,
+    COALESCE(SUM(O.totalPrice), 0.00) AS total_revenue_handled
+FROM employees E
+LEFT JOIN orders O ON E.employeeID = O.employeeID
+GROUP BY E.employeeID, E.employeeName
+ORDER BY total_revenue_handled DESC;
 
+-- ----------------------------------------------------------------------------
+-- Statement 19: Catalog Items Above Average Cost
+-- Explanation: This statement finds all products with a retail price higher 
+--              than the total average retail price across the store's entire 
+--              catalog.
+-- ----------------------------------------------------------------------------
+SELECT 
+    P.productID,
+    P.productName,
+    P.productType,
+    P.productPrice
+FROM products P
+WHERE P.productPrice > (
+    SELECT AVG(productPrice)
+    FROM products
+)
+ORDER BY P.productPrice DESC;
+
+-- ----------------------------------------------------------------------------
+-- Statement 20: Wholesale Cost Adjustment for Appliances
+-- Explanation: This statement applies a 5% wholesale cost increase in the 
+--              supply table for all store products that are classified under 
+--              the 'Appliance' product type.
+-- ----------------------------------------------------------------------------
+UPDATE supply
+SET wholesaleCost = ROUND(wholesaleCost * 1.05, 2)
+WHERE productID IN (
+    SELECT productID
+    FROM products
+    WHERE productType = 'Appliance'
+);
 
 -- ============================================================================
 -- SECTION 3: COMPLEX STATEMENTS (Roughly 10 Statements)
@@ -362,32 +459,98 @@ GROUP BY employeeID, employeeName
 ORDER BY "Gross Profit" DESC;
 
 -- ----------------------------------------------------------------------------
--- Statement 26: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 26: Low Stock Vendor Alert
+-- Explanation: This statement searches for vendors that supply a product with 3 or fewer units 
+-- currently in stock at any store. It also retrieves each vendor's ID, name, and email in alphabetical order.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
+SELECT V.vendorID, V.vendorName, V.vendorEmail
+FROM vendors V
+WHERE EXISTS (
+    SELECT 1
+    FROM supply S
+    JOIN inventorystock I ON S.productID = I.productID
+    WHERE S.vendorID = V.vendorID
+      AND I.quantityOnHand <= 3
+)
+ORDER BY V.vendorName ASC;
 
 -- ----------------------------------------------------------------------------
--- Statement 27: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 27: Store Location Shared Stock Finder
+-- Explanation: This statement will find the product IDs and names of items stocked 
+-- at both store location 1 and store location 23 to keep only overlapping products. 
+-- The results are also ordered by product ID.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
+SELECT P.productID, P.productName
+FROM products P
+JOIN inventorystock I ON P.productID = I.productID
+WHERE I.locationID = 1
+INTERSECT
+SELECT P.productID, P.productName
+FROM products P
+JOIN inventorystock I ON P.productID = I.productID
+WHERE I.locationID = 23
+ORDER BY productID ASC;
 
 -- ----------------------------------------------------------------------------
--- Statement 28: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 28: Store & Vendor Contact Directory
+-- Explanation: This statement combines all store employees and vendors into a contact directory. 
+-- Each contact's name, email, and role affiliation are included and ordered alphabetically.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
+SELECT 
+    employeeName AS contact_name,
+    employeeEmail AS contact_email,
+    'INTERNAL EMPLOYEE' AS affiliation
+FROM employees
+UNION ALL
+SELECT 
+    vendorName AS contact_name,
+    vendorEmail AS contact_email,
+    'EXTERNAL VENDOR' AS affiliation
+FROM vendors
+ORDER BY contact_name ASC;
 
 -- ----------------------------------------------------------------------------
--- Statement 29: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 29: Category Best-Sellers Ranking
+-- Explanation: This statement calculates the total units sold and total 
+-- revenue for each product, which are ranked from highest to lowest revenue for each product category.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
+WITH ProductSales AS (
+    SELECT 
+        P.productID,
+        P.productName,
+        P.productType,
+        SUM(OI.quantity) AS total_units_sold,
+        SUM(OI.quantity * P.productPrice) AS total_revenue
+    FROM products P
+    JOIN orderitems OI ON P.productID = OI.productID
+    GROUP BY P.productID, P.productName, P.productType
+)
+SELECT 
+    productType,
+    productID,
+    productName,
+    total_units_sold,
+    total_revenue,
+    DENSE_RANK() OVER (
+        PARTITION BY productType 
+        ORDER BY total_revenue DESC
+    ) AS rank_in_category
+FROM ProductSales
+ORDER BY productType ASC, rank_in_category ASC;
 
-
 -- ----------------------------------------------------------------------------
--- Statement 30: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 30: Category Inventory Status Breakdown
+-- Explanation: This statement displays every product category across the store, 
+-- and displays items out of stock, low stock, or well stocked. Total number of stocking 
+-- records per category is included aswell.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
+SELECT 
+    P.productType,
+    COUNT(CASE WHEN I.quantityOnHand = 0 THEN 1 END) AS out_of_stock_locations,
+    COUNT(CASE WHEN I.quantityOnHand BETWEEN 1 AND 5 THEN 1 END) AS low_stock_locations,
+    COUNT(CASE WHEN I.quantityOnHand > 5 THEN 1 END) AS well_stocked_locations,
+    COUNT(*) AS total_stock_records
+FROM products P
+JOIN inventorystock I ON P.productID = I.productID
+GROUP BY P.productType
+ORDER BY total_stock_records DESC;
