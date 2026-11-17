@@ -1,4 +1,4 @@
--- ============================================================================
+    -- ============================================================================
 -- CSE 111 Fall 2026: Project Checkpoint 2 Script
 -- Project Title: [Captain Clark's Furniture and Appliance Store DBMS]
 -- Team Members: Nue Lopez, Garret Clark
@@ -267,34 +267,86 @@ ORDER BY [Total Unit] ASC;
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
--- Statement 21: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 21: Most expensive furniture products never ordered by NBA players.
+-- Explanation: Uses multi-table NOT IN subquery in orderItems, orders, and 
+--              customers to find the top 10 most expnesive furniture products
+--              never purchased by a customer from the domain hoops.example 
+--              email address.  
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 21 Here];
+SELECT p.productID AS [Product ID], p.productName AS [Product Name], p.productType AS "Category", p.productPrice AS "Price"
+FROM products p
+WHERE p.productType = 'Furniture' 
+    AND p.productID NOT IN (SELECT DISTINCT oi.productID
+                            FROM orderItems oi
+                            JOIN orders o ON oi.orderID = o.orderID --same
+                            JOIN customers c ON o.custID = c.custID 
+                            WHERE c.custEmail LIKE '%hoops.example')
+ORDER BY p.productPrice DESC
+LIMIT 10;   
 
 -- ----------------------------------------------------------------------------
--- Statement 22: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 22: Customers going to store but not making any purchases in 2026
+-- Explanation: Find customers using EXISTS, NOT EXISTS, and Subqueries to 
+--      find customers receiving help but have not yet placed an order in 2026.  
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
+SELECT c.custID AS [Customer ID], c.custName AS [Customer Name], c.custEmail AS [Customer Email]
+FROM customers c
+WHERE EXISTS (
+    SELECT 1 
+    FROM helps h 
+    WHERE h.custID = c.custID 
+        AND h.interactionDate >= '2026-01-01'
+    ) --date larger than 2026
+    AND NOT EXISTS
+    (SELECT 1 FROM orders o 
+        WHERE o.custID = c.custID 
+            AND o.orderDate >= '2026-01-01')
+ORDER BY c.custID;
 
 -- ----------------------------------------------------------------------------
--- Statement 23: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 23: Clearance Products are missing from Overflow Backstock
+-- Explanation: List products stocked in the Clearance & Outlet Corner 
+--      (locationID 23) that are not in Overflow Backstock Bay (locationID 24) 
+--      using EXCEPT (-). 
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
+SELECT p.productID AS [Product ID], p.productName AS [Product Name], p.productType AS [Category]
+FROM products p
+JOIN inventoryStock i ON p.productID = i.productID
+WHERE i.locationID = 23
+EXCEPT
+SELECT p1.productID, p1.productName, p1.productType 
+    FROM products p1
+    JOIN inventoryStock i ON p1.productID = i.productID
+    WHERE i.locationID = 24
+ORDER BY [Product ID];
+
 
 -- ----------------------------------------------------------------------------
--- Statement 24: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 24: Creating view for Order Lineitem Costs and Revenue Breakdown
+-- Explanation: Creates view by joining orders, employees, customers, 
+--      orderItems, and products to find average wholesaleCost in the store 
+--      from supply to find the wholesale cost and revenue. 
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
+DROP VIEW IF EXISTS View_CostOfOrderBreakdown;
+CREATE VIEW View_CostOfOrderBreakdown AS 
+    SELECT o.orderID, o.orderDate, o.orderPriority, e.employeeID, employeeName, c.custID, c.custName, p.productID, 
+        p.productName, p.productType, oi.quantity, 
+        p.productPrice AS unitRetailPrice, 
+    (SELECT ROUND (AVG(s.wholesaleCost), 2)
+FROM supply s
+WHERE s.productID = p.productID) AS avgWholesaleCost,
+ROUND(oi.quantity * p.productPrice, 2) AS lineRetailRevenue,
+ROUND(oi.quantity * (SELECT AVG(s.wholesaleCost) FROM supply s WHERE s.productID = p.productID), 2) AS lineWholesaleCost
+FROM orders o
+JOIN employees e ON o.employeeID = e.employeeID
+JOIN customers c ON o.custID = c.custID
+JOIN orderItems oi ON o.orderID = oi.orderID
+JOIN products p ON oi.productID = p.productID;
 
 -- ----------------------------------------------------------------------------
--- Statement 25: [Brief Title]
--- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
+-- Statement 25: Show sales and margin tier.
+-- Explanation: Uses View_CostOfOrderBreakdown for complex analytics.
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement 2# Here];
 
 -- ----------------------------------------------------------------------------
 -- Statement 26: [Brief Title]
