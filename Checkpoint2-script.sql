@@ -344,10 +344,22 @@ JOIN orderItems oi ON o.orderID = oi.orderID
 JOIN products p ON oi.productID = p.productID;
 
 -- ----------------------------------------------------------------------------
--- Statement 25: Show sales and margin tier.
--- Explanation: Uses View_CostOfOrderBreakdown for complex analytics.
+-- Statement 25: List Employee Sales by Order Priority and Gross Profit
+-- Explanation: Queries the view using conditional CASE and ELSE conditions/
+--      statements (if-else statements) to sort each employee's retail 
+--      revenue based on the three priority level orders. The final calculated 
+--      results are totals of each employee's wholesale cost and gross profit, 
+--      sorted from lowest to highest.
 -- ----------------------------------------------------------------------------
-
+SELECT employeeID AS [Employee ID], employeeName AS [Employee Name], 
+    ROUND(SUM(CASE WHEN orderPriority = 1 THEN lineRetailRevenue ELSE 0 END), 2) AS [Priority 1 Sale], 
+    ROUND(SUM(CASE WHEN orderPriority = 2 THEN lineRetailRevenue ELSE 0 END), 2) AS [Priority 2 Sale], 
+    ROUND(SUM(CASE WHEN orderPriority = 3 THEN lineRetailRevenue ELSE 0 END), 2) AS [Priority 3 Sale], 
+    ROUND(SUM(lineWholesaleCost), 2) AS [Total Wholesale Cost], 
+    ROUND(SUM(lineRetailRevenue - lineWholesaleCost), 2) AS [Gross Profit]
+FROM View_CostOfOrderBreakdown
+GROUP BY employeeID, employeeName
+ORDER BY "Gross Profit" DESC;
 -- ----------------------------------------------------------------------------
 -- Statement 26: [Brief Title]
 -- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
