@@ -1,4 +1,4 @@
-    -- ============================================================================
+-- ============================================================================
 -- CSE 111 Fall 2026: Project Checkpoint 2 Script
 -- Project Title: [Captain Clark's Furniture and Appliance Store DBMS]
 -- Team Members: Nue Lopez, Garret Clark
@@ -83,22 +83,22 @@ PRAGMA foreign_keys = ON;
 
 -- ----------------------------------------------------------------------------
 -- Statement 01: Find the customer's ID, name, and balance. 
--- Explanation: Query retrieves three ____: custID, custName, and custBalance. 
+-- Explanation: Query retrieves three items: custID, custName, and custBalance. 
 --  We must track them down from decreasing order based on their balance owed.
 -- ----------------------------------------------------------------------------
 SELECT custID AS [Customer ID], custName AS 'Customer Name', custBalance AS `Balance Owed`
 FROM customers
-WHERE custBalance > 0
+WHERE custBalance > 0  
 ORDER BY custBalance DESC;
 
 -- ----------------------------------------------------------------------------
--- Statement 02: Orders in Merced County in 2026. 
+-- Statement 02: Shipping orders to Merced County in 2023. 
 -- Explanation: Counting the amount of orders shipped in Merced county this year.  
 -- ----------------------------------------------------------------------------
-SELECT COUNT(orderID)
+SELECT COUNT(orderID) AS [Merced Orders in 2023]
 FROM orders
 WHERE (shipAddr LIKE '%MERCED%' OR shipAddr LIKE '%ATWATER%' OR shipAddr LIKE '%LOS BANOS%')
-    AND orderDate LIKE '2026%';
+    AND orderDate LIKE '2023%';
 
 -- ----------------------------------------------------------------------------
 -- Statement 03: Select furniture that is not a bed or a mattress. 
@@ -153,18 +153,19 @@ WHERE employeeID = 3;
 -- Explanation: Counts distinct customers from every county have placed at 
 --              least one order and have more than the average account balance.
 -- ----------------------------------------------------------------------------
-SELECT COUNT(DISTINCT(c.custID)) AS [Customer Count], AVG(c.custBalance) AS [Average Balance]
+SELECT COUNT(DISTINCT(c.custID)) AS [Customer Count], ROUND(AVG(c.custBalance), 2) AS [Average Balance]
 FROM customers c
 JOIN orders o ON c.custID = o.custID
 WHERE (c.custAddr LIKE '% Merced, CA %'
-OR c.custAddr LIKE '% Atwater, CA %'
-OR c.custAddr LIKE '% Los Banos, CA %'
-OR c.custAddr LIKE '% Madera, CA %'
-OR c.custAddr LIKE '% Fresno, CA %'
-OR c.custAddr LIKE '% Modesto, CA %'
-OR c.custAddr LIKE '% Turlock, CA %')
-AND c.custBalance > (SELECT AVG(custBalance) FROM customers)
-HAVING COUNT(c.custID) >= 1;
+    OR c.custAddr LIKE '% Atwater, CA %'
+    OR c.custAddr LIKE '% Los Banos, CA %'
+    OR c.custAddr LIKE '% Madera, CA %'
+    OR c.custAddr LIKE '% Fresno, CA %'
+    OR c.custAddr LIKE '% Modesto, CA %'
+    OR c.custAddr LIKE '% Turlock, CA %')
+    AND c.custBalance > (SELECT AVG(custBalance) FROM customers)
+HAVING COUNT(c.custID) >= 1
+;
 
 
 -- ----------------------------------------------------------------------------
@@ -203,7 +204,7 @@ LIMIT 1;
 -- Statement 14: Infrequent customers
 -- Explanation: List customers having five or less orders and their total spend.
 -- ----------------------------------------------------------------------------
-SELECT c.custID AS [Customer ID], c.custName AS [Customer Name], COUNT(o.orderID) AS [Total Orders], SUM(c.custBalance) AS [Total Valance]
+SELECT c.custID AS [Customer ID], c.custName AS [Customer Name], COUNT(o.orderID) AS [Total Orders], SUM(c.custBalance) AS [Total Balance]
 FROM customers c
 LEFT JOIN orders o ON c.custID = o.custID
 GROUP BY c.custID, c.custName
@@ -211,18 +212,10 @@ HAVING COUNT(o.orderID) <= 5
 ORDER BY [Total Orders] DESC, c.custID;
 
 -- ----------------------------------------------------------------------------
--- Statement 15: Check low stock asiles needing replenishment.
--- Explanation: Joins locationsInStore and inventoryStock to total the current 
---              units per asile and section to flag asiles HAVING fewer than 
---              150 total units. 
+-- Statement 15:    
+-- Explanation: 
 -- ----------------------------------------------------------------------------
--- [Insert SQL Statement ## Here];
-SELECT lis.aisleNumber AS [Aisle], lis.sectionName AS [Section], COUNT(i.productID) AS [Distinct Products], SUM(i.quantityOnHand) AS [Total Unit]
-FROM locationsInStore lis
-JOIN inventoryStock i ON lis.locationID = i.locationID
-GROUP BY lis.aisleNumber, lis.sectionName
-HAVING SUM(i.quantityOnHand) < 150
-ORDER BY [Total Unit] ASC;
+
 
 -- ----------------------------------------------------------------------------
 -- Statement 16: [Brief Title]
@@ -360,6 +353,7 @@ SELECT employeeID AS [Employee ID], employeeName AS [Employee Name],
 FROM View_CostOfOrderBreakdown
 GROUP BY employeeID, employeeName
 ORDER BY "Gross Profit" DESC;
+
 -- ----------------------------------------------------------------------------
 -- Statement 26: [Brief Title]
 -- Explanation: [1 to 2 sentences explaining the complex query/trigger logic].
