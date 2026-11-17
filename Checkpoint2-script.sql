@@ -212,10 +212,17 @@ HAVING COUNT(o.orderID) <= 5
 ORDER BY [Total Orders] DESC, c.custID;
 
 -- ----------------------------------------------------------------------------
--- Statement 15:    
--- Explanation: 
+-- Statement 15: Vendors Supplying High-Cost Merchandise
+-- Explanation: Joins vendors and supply to figure out each vendor's supplied 
+--          product count and wholesale cost. Filter for suppliers having at 
+--          least one item over $1,000. 
 -- ----------------------------------------------------------------------------
-
+SELECT v.vendorID AS [Vendor ID], v.vendorName AS [Vendor Name], COUNT(s.productID) AS [Products Supplied], ROUND(MIN(s.wholesaleCost), 2) AS [Lowest Cost], ROUND(MAX(s.wholesaleCost), 2) AS [Highest Cost]
+FROM vendors v
+JOIN supply s ON v.vendorID = s.vendorID
+GROUP BY v.vendorID, v.vendorName
+HAVING MAX(s.wholesaleCost) > 1000
+ORDER BY [Highest Cost] DESC;
 
 -- ----------------------------------------------------------------------------
 -- Statement 16: [Brief Title]
