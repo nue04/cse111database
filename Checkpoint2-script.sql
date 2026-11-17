@@ -3,31 +3,27 @@
 -- Project Title: [Captain Clark's Furniture and Appliance Store DBMS]
 -- Team Members: Nue Lopez, Garret Clark
 -- File: Checkpoint2-script.sql
+-- GitHub for easy access to instructors: https://github.com/nue04/cse111database
 -- ============================================================================
 
 
 -- ============================================================================
 -- SCHEMA MODIFICATIONS SINCE CHECKPOINT 1
 -- ============================================================================
--- Explain any modifications to your relational schema made since Checkpoint 1.
--- (e.g., added indexes, modified check constraints, renamed columns, or 
---  clarified weak entity vs. junction relationships). If no changes were made, 
---  explicitly state: "No modifications made to the Checkpoint 1 schema."
---
 -- Modifications:
 -- 1. Schema Modifications Since Checkpoint 1:
---      * Added color (BOOLEAN) to products
---      * Added isManager (BOOLEAN) to employees
+--      * Added color (BOOLEAN) to products.
+--      * Added isManager (BOOLEAN) to employees.
 
--- 2. [Description of schema modification 2]
+-- 2. Constraint & View Refinements
+--      * Added CHECK (productPrice >= 0.00) on products. Enhanced orderItems.quantity 
+--          from CHECK (quantity >= 0) to CHECK (quantity > 0).
+--      * Added a virtual view labeled View_CostOfOrderBreakdown.
 -- ============================================================================
 
 -- ============================================================================
--- MEMBER CONTRIBUTIONS SUMMARY (GROUPED AT THE TOP)
+-- MEMBER CONTRIBUTIONS SUMMARY
 -- ============================================================================
--- Identify the member contributions to each query or modification statement
--- below. Each statement must sum to 100% across the 2 team members.
---
 -- SECTION 1: SIMPLE STATEMENTS
 -- Statement 01: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 02: Nue Lopez: 100%, Garret Clark: 0%
@@ -53,7 +49,7 @@
 -- Statement 20: Nue Lopez: 0%, Garret Clark: 100%
 
 -- SECTION 3: COMPLEX STATEMENTS
--- Statement 21: Nue Lopez: XX%, Garret Clark: 0%
+-- Statement 21: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 22: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 23: Nue Lopez: 100%, Garret Clark: 0%
 -- Statement 24: Nue Lopez: 100%, Garret Clark: 0%
@@ -127,7 +123,7 @@ LIMIT 5;
 
 -- ----------------------------------------------------------------------------
 -- Statement 05: Employee promoted to Manager
--- Explanation: [Explanation here].
+-- Explanation: Promote Samantha Miller to manager.
 -- ----------------------------------------------------------------------------
 UPDATE employees
 SET isManager = TRUE
@@ -382,7 +378,7 @@ ORDER BY p.productPrice DESC
 LIMIT 10;   
 
 -- ----------------------------------------------------------------------------
--- Statement 22: Customers going to store but not making any purchases in 2026
+-- Statement 22: Customers going to store but not making any purchases in 2020
 -- Explanation: Find customers using EXISTS, NOT EXISTS, and Subqueries to 
 --      find customers receiving help but have not yet placed an order in 2026.  
 -- ----------------------------------------------------------------------------
@@ -392,12 +388,12 @@ WHERE EXISTS (
     SELECT 1 
     FROM helps h 
     WHERE h.custID = c.custID 
-        AND h.interactionDate >= '2026-01-01'
+        AND h.interactionDate >= '2020-01-01'
     ) --date larger than 2026
     AND NOT EXISTS
     (SELECT 1 FROM orders o 
         WHERE o.custID = c.custID 
-            AND o.orderDate >= '2026-01-01')
+            AND o.orderDate >= '2020-01-01')
 ORDER BY c.custID;
 
 -- ----------------------------------------------------------------------------
@@ -489,7 +485,7 @@ SELECT P.productID, P.productName
 FROM products P
 JOIN inventorystock I ON P.productID = I.productID
 WHERE I.locationID = 23
-ORDER BY productID ASC;
+ORDER BY P.productID ASC;
 
 -- ----------------------------------------------------------------------------
 -- Statement 28: Store & Vendor Contact Directory
